@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+console.log("BASE_URL", import.meta.env.VITE_BASE_URL);
+const tokenFromStorage = localStorage.getItem("token");
 
 interface UserState {
     token: string | null;
@@ -9,7 +12,7 @@ interface UserState {
 }
 
 const initialState : UserState ={
-    token: null,
+    token: tokenFromStorage,
     isAuthenticated : false,
     loading: false,
     error: null
@@ -19,7 +22,7 @@ export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async(payload : {email:string, password:string}, thunkAPI)=>{
         try{
-            const res = await axios.post('https://silver-zebra-v6r6r69r4wgq3wrw5-3000.app.github.dev/api/users/login', payload);
+            const res = await axios.post(`${BASE_URL}/api/users/login`, payload, { withCredentials: true } );
             return res.data.token;
         }catch(err:any){    
             return thunkAPI.rejectWithValue(err.response?.data?.message || 'Login Failed')
@@ -31,7 +34,11 @@ export const registerUser = createAsyncThunk(
     '/auth/registerUser',
     async(data:{name: string; email: string; password: string}, thunkAPI)=>{
         try{
-            const res = await axios.post('https://silver-zebra-v6r6r69r4wgq3wrw5-3000.app.github.dev/api/users/register', data);
+            const res = await axios.post(
+                `${BASE_URL}/api/users/register`,
+                data,
+                { withCredentials: true } 
+              );
             return res.data
         }catch(err: any){
             return thunkAPI.rejectWithValue(err?.response?.data?.message || 'Registration failed');
@@ -45,7 +52,8 @@ const authSlice = createSlice({
     reducers:{
         logout : (state) =>{
             state.token = null;
-            state.isAuthenticated = false
+            state.isAuthenticated = false;
+            localStorage.removeItem("token");
         }
     },
     extraReducers:(builder)=>{
@@ -58,6 +66,7 @@ const authSlice = createSlice({
                 state.token = action.payload;
                 state.isAuthenticated = true;
                 state.loading = false;
+                localStorage.setItem("token", action.payload);
             })
             .addCase(loginUser.rejected, (state, action)=>{
                 state.loading=  false;
