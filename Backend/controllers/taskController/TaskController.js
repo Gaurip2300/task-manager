@@ -92,35 +92,10 @@ const deleteTask = async (req, res, next) => {
     }
 }
 
-const searchTasks = async(req, res, next) =>{
-    try{
-        const { title, status, priority, dueDate } = req.query;
-        const query = {user_id: req.user._id};
-
-       if (title) {
-            query.title = { $regex: title, $options: 'i' };
-        }
-        if (status) {
-            query.status = status;
-        }
-        if (priority) {
-            query.priority = priority;
-        }
-        if (dueDate) {
-            query.dueDate = new Date(dueDate);
-        }
-
-        const tasks = await Task.find(query);
-        res.status(statusCodes.OK).json(tasks);
-    }catch(err){
-        next(err);
-    }
-}
 
 module.exports = {
     createTask,
     getAllTasks,
     updateTask,
-    deleteTask,
-    searchTasks
+    deleteTask
 };

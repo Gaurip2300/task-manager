@@ -8,7 +8,15 @@ app.set("trust proxy", 1);
 
 const cors = require("cors");
 const errorHandler = require("./middleware/errro");
-app.use(cors());
+app.use(
+    cors({
+      origin: 'https://silver-zebra-v6r6r69r4wgq3wrw5-5173.app.github.dev',
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    })
+);
+app.options('*', cors());
 
 connectDB();
 app.use(express.json());
