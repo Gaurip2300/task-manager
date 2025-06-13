@@ -10,23 +10,28 @@ This is the frontend of a **Task Manager** application built with:
 - Connected to a Node.js + MongoDB backend
 
 ## 🚀 Getting Started
+## Frontend Setup
 
 ### Prerequisites
-
 - [Node.js](https://nodejs.org/) (v18+ recommended)
-- Backend API running (see [Task Manager Backend](#))
-
-### 1️⃣ Clone the Repo
+- Backend API running
 
 ```bash
-git clone <repo-url>
-cd task-manager-frontend
+git clone https://github.com/Gaurip2300/task-manager.git
+cd Frontend
+```
 
 ### Install Dependencies
+```bash
 npm install
+```
 
 ### Configure Environment
-BASE_URL=<BASE_URL_FOR_BACKEND>
+```bash
+VITE_BASE_URL=<BASE_URL_FOR_BACKEND>
+```
 
 ### Run the App
+```bash
 npm run dev
+```
