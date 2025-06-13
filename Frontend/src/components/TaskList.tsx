@@ -1,13 +1,12 @@
-import { Checkbox, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Box, Button, TablePagination } from "@mui/material";
+import { Checkbox, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box, Button, TablePagination } from "@mui/material";
 import { useState } from "react";
 import { deleteTask, updateTask } from "../features/tasks/taskSlice";
 import { useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "../store";
+import type { AppDispatch } from "../store";
 
-// Define the Task type if not already imported
 type Task = {
   _id: string;
-  id?: string; // in case you use both _id and id
+  id?: string;
   title: string;
   description: string;
   dueDate: string;
@@ -33,7 +32,10 @@ const TaskList = ({ tasks, onEdit }: TaskListProps) => {
   const [page, setPage] = useState(0);
   const rowsPerPage = 4;
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (
+    _event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
     setPage(newPage);
   };
 

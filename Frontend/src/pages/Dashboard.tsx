@@ -1,4 +1,5 @@
-import { Container, Typography, CircularProgress, Modal, Box, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material"
+import { Container, Typography, CircularProgress, Modal, Box, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import type { SelectChangeEvent } from "@mui/material";
 import Navbar from "../components/Navbar"
 import TaskList from "../components/TaskList"
 import { useEffect, useState } from "react"
@@ -6,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../store";
 import { getAllTasks } from "../features/tasks/taskSlice"
 import AddTask from "../components/AddTask"
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type Task = {
     _id: string;
@@ -16,7 +17,15 @@ type Task = {
     priority: string;
     status: "pending" | "completed";
 };
+const allowedPriorities = ["low", "medium", "high"] as const;
+type Priority = typeof allowedPriorities[number];
 
+function toStrictTask(task: any): { _id: string; title: string; description: string; dueDate: string; priority: Priority } {
+    return {
+        ...task,
+        priority: allowedPriorities.includes(task.priority) ? task.priority as Priority : "medium"
+    };
+}
 const Dashboard = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { tasks, loading, error } = useSelector((state: RootState) => state.tasks);
@@ -46,17 +55,20 @@ const Dashboard = () => {
         }
     }, [token]);
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         setSearchText(e.target.value);
     };
 
-    const handleStatusFilterChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+
+    const handleStatusFilterChange = (e: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent) => {
         const value = e.target.value as string;
         setStatusFilter(value);
         dispatch(getAllTasks({ status: value || undefined, priority: priorityFilter || undefined }));
     };
 
-    const handlePriorityFilterChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    const handlePriorityFilterChange = (e: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent) => {
         const value = e.target.value as string;
         setPriorityFilter(value);
         dispatch(getAllTasks({ status: statusFilter || undefined, priority: value || undefined }));
@@ -154,7 +166,7 @@ const Dashboard = () => {
                                 setShowAddTaskForm(false);
                                 setTaskToEdit(null);
                             }}
-                            taskToEdit={taskToEdit ?? undefined}
+                            taskToEdit={taskToEdit ? toStrictTask(taskToEdit) : undefined}
                         />
                     </Box>
                 </Modal>
