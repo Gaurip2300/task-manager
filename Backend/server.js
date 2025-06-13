@@ -10,7 +10,7 @@ const cors = require("cors");
 const errorHandler = require("./middleware/errro");
 app.use(
     cors({
-      origin: 'https://silver-zebra-v6r6r69r4wgq3wrw5-5173.app.github.dev',
+      origin: process.env.CLIENT_URL,
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization'],
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
