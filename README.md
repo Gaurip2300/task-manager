@@ -1,4 +1,9 @@
 # Task Manager Application
+## Live Demo
+
+You can try out the live version of the application here:
+
+[Task Manager Live Demo](https://task-manager-brown-six.vercel.app/)
 ## Pre-requirements
 
 To run this project, you will need:
